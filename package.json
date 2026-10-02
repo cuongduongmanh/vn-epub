@@ -1,0 +1,93 @@
+{
+  "name": "vn-epub",
+  "productName": "VN EPUB Maker",
+  "version": "1.0.0",
+  "description": "Chuyển file TXT/Markdown sang EPUB tối ưu cho tiếng Việt, đọc tốt trên Android",
+  "main": "dist/main/main.js",
+  "author": "VN EPUB Maker",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.renderer.json && node scripts/copy-assets.mjs",
+    "start": "npm run build && electron .",
+    "cli": "npm run build && node dist/cli.js",
+    "test": "npm run build && node scripts/smoke-test.mjs",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "@expo-google-fonts/be-vietnam-pro": "^0.4.1",
+    "@expo-google-fonts/literata": "^0.4.3",
+    "@expo-google-fonts/noto-serif": "^0.4.2",
+    "iconv-lite": "^0.7.3",
+    "jszip": "^3.10.2",
+    "marked": "^18.0.14",
+    "subset-font": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3",
+    "fast-xml-parser": "^5.11.2",
+    "typescript": "^7.0.2"
+  },
+  "type": "module",
+  "build": {
+    "appId": "vn.epubmaker.app",
+    "productName": "VN EPUB Maker",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/*.wasm"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "shortcutName": "VN EPUB Maker"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "fileAssociations": [
+      {
+        "ext": [
+          "txt",
+          "md",
+          "markdown"
+        ],
+        "name": "Text document",
+        "role": "Viewer"
+      }
+    ]
+  },
+  "bin": {
+    "vn-epub": "dist/cli.js"
+  }
+}

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; font-src 'self' data: blob:; style-src 'self' 'unsafe-inline'" />
+  <title>VN EPUB Maker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>VN EPUB Maker</h1>
+    <span class="sub">TXT / Markdown → EPUB, tối ưu tiếng Việt cho máy đọc Android</span>
+  </header>
+
+  <main>
+    <section class="files">
+      <div id="drop" class="drop">
+        <p>Kéo thả file <b>.txt</b> / <b>.md</b> vào đây</p>
+        <button id="btn-add" class="primary">Chọn file…</button>
+      </div>
+      <ul id="file-list"></ul>
+      <div class="files-actions">
+        <button id="btn-convert-all" disabled>Tạo EPUB cho tất cả</button>
+      </div>
+    </section>
+
+    <section class="detail" id="detail" hidden>
+      <div class="grid">
+        <div class="col">
+          <h2>Thông tin sách</h2>
+          <label>Tên sách <input id="f-title" type="text" /></label>
+          <label>Tác giả <input id="f-author" type="text" /></label>
+          <label>Giới thiệu <textarea id="f-desc" rows="2"></textarea></label>
+
+          <h2>Đọc file</h2>
+          <div class="row">
+            <label>Bảng mã
+              <select id="o-encoding">
+                <option value="auto">Tự nhận diện</option>
+                <option value="utf-8">UTF-8</option>
+                <option value="utf-16le">UTF-16 LE</option>
+                <option value="utf-16be">UTF-16 BE</option>
+                <option value="windows-1258">Windows-1258 (CP1258)</option>
+                <option value="tcvn3">TCVN3 (ABC)</option>
+              </select>
+            </label>
+            <label>Chia đoạn
+              <select id="o-para">
+                <option value="auto">Tự động</option>
+                <option value="blank">Theo dòng trống (nối dòng bị ngắt)</option>
+                <option value="line">Mỗi dòng một đoạn</option>
+              </select>
+            </label>
+          </div>
+          <details>
+            <summary>Tách chương nâng cao</summary>
+            <label>Regex tiêu đề chương (TXT, để trống = mặc định)
+              <input id="o-pattern" type="text" placeholder="vd: ^Chương\s+\d+.*$" spellcheck="false" />
+            </label>
+            <div class="row">
+              <label>Markdown tách theo
+                <select id="o-mdlevel">
+                  <option value="0">Tự động</option>
+                  <option value="1"># H1</option>
+                  <option value="2">## H2</option>
+                  <option value="3">### H3</option>
+                </select>
+              </label>
+              <label>Không có chương: chia mỗi
+                <input id="o-autosplit" type="number" min="2000" step="1000" /> ký tự
+              </label>
+            </div>
+          </details>
+
+          <h2>Font &amp; trình bày</h2>
+          <label>Font nhúng
+            <select id="o-font"></select>
+          </label>
+          <div id="custom-font-row" class="row" hidden>
+            <span id="custom-font-name" class="muted">Chưa chọn font</span>
+            <button id="btn-font">Chọn .ttf/.otf…</button>
+          </div>
+          <label class="check"><input id="o-subset" type="checkbox" /> Cắt font theo ký tự dùng trong sách (giảm dung lượng)</label>
+          <div class="row">
+            <label>Cỡ chữ (em) <input id="o-size" type="number" min="0.7" max="2" step="0.05" /></label>
+            <label>Giãn dòng <input id="o-lh" type="number" min="1.2" max="2.4" step="0.05" /></label>
+            <label>Thụt đầu dòng (em) <input id="o-indent" type="number" min="0" max="4" step="0.5" /></label>
+          </div>
+          <label class="check"><input id="o-justify" type="checkbox" /> Căn đều hai bên</label>
+          <p id="font-sample" class="font-sample">Tiếng Việt: Ầ Ẩ Ẫ Ấ Ậ · Ễ Ệ Ộ Ợ Ự · “Người ở lại – đường xưa lối cũ…”</p>
+
+          <h2>Bìa &amp; xuất file</h2>
+          <div class="cover-row">
+            <canvas id="cover" width="600" height="900"></canvas>
+            <div class="col">
+              <label class="check"><input id="o-autocover" type="checkbox" /> Tự tạo bìa từ tên sách</label>
+              <button id="btn-cover">Chọn ảnh bìa…</button>
+              <button id="btn-cover-clear" class="link">Bỏ ảnh bìa</button>
+              <hr />
+              <span class="muted">Lưu vào:</span>
+              <span id="out-dir" class="path">Cùng thư mục với file nguồn</span>
+              <div class="row">
+                <button id="btn-out">Chọn thư mục…</button>
+                <button id="btn-out-clear" class="link">Mặc định</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <h2>Kết quả phân tích</h2>
+          <div id="stats" class="stats"></div>
+          <ul id="warnings" class="warnings"></ul>
+          <ol id="toc" class="toc"></ol>
+        </div>
+      </div>
+
+      <footer>
+        <span id="status" class="muted"></span>
+        <button id="btn-convert" class="primary">Tạo EPUB</button>
+      </footer>
+    </section>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
