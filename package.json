@@ -61,7 +61,8 @@
       "allowToChangeInstallationDirectory": true,
       "perMachine": false,
       "createDesktopShortcut": true,
-      "shortcutName": "VN EPUB Maker"
+      "shortcutName": "VN EPUB Maker",
+      "artifactName": "VN-EPUB-Maker-Setup-${version}.${ext}"
     },
     "mac": {
       "target": [
@@ -85,7 +86,10 @@
         "name": "Text document",
         "role": "Viewer"
       }
-    ]
+    ],
+    "dmg": {
+      "artifactName": "VN-EPUB-Maker-${version}-${arch}.${ext}"
+    }
   },
   "bin": {
     "vn-epub": "dist/cli.js"
